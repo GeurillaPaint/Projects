@@ -29,9 +29,11 @@ I opted to not pursue the bonus with automated testing. Most of the information
 I had found online involved applying Java scripts to the system and running
 stress tests on receiving and sending information to Kafka to store.
 
-For future release, I'd want to ensure autoscaling of the pods used for the kafka cluster
+For future release, I'd want to autoscale Kafka 
 once a certain storage percentage was reached, or even a certain CPU percentage was reached
-in order to provide redundancy and reliability.
+in order to provide redundancy and reliability. Also, self healing would be a tremendous thing to enable in the event
+of a pod going down, which could be done by implementing health checks, as well as monitoring with Prometheus.
+However, that was not a part of the requirements and was left out.
 
 I would have loved to also test this in EKS, but I was worried about that costing money which I cannot 
 afford at this time.
