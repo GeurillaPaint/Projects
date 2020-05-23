@@ -25,9 +25,8 @@ The YAML scripts assemble using Kustomize.
 * This mini project's only requirement is kubectl. Everything else is optional.
 
 
-I opted to not pursue the bonus with automated testing. Most of the information
-I had found online involved applying Java scripts to the system and running
-stress tests on receiving and sending information to Kafka to store.
+I opted to not pursue the bonus with automated testing. There is, however, a testing file within my kafka directory that utilizes
+kafkacat for some load testing. I wouldn't call it automated, however, so I'm not counting it.
 
 For future release, I'd want to autoscale Kafka 
 once a certain storage percentage was reached, or even a certain CPU percentage was reached
