@@ -1,0 +1,110 @@
+
+Changing VLANS
+
+Goto jump, goto switch.
+system-view
+dis int brie to get bagg. example: BAGG101
+interface Bridge-Aggregation 101 to go into example. sub for actual bagg.
+port trunk permit vlan <list vlans needed. default cmd below>
+ctrl Z
+save
+Repeat process on access switch or whatever is connected to this.
+To find info on connected switch, run lldp command below. grab sys name and search IP.
+]CMDS[
+
+system-view   puts you in system. for editing purposes.
+dis int brie    to see port status and vlans
+int ten x/x/x   to go to port
+int Bridge<tab> <bagg #>  to goto bridge aggregation for adding vlans.
+int FortyGigE #/#/# to get into 40 Gig area.
+port trunk permit vlan 2 13 14 15 49 to 50 55 59 100 to 101 200 601 to 900 1001 to 1999 2200 to 3000 4010 to 4094  default vlan cmd inside bagg to add vlans.
+
+dis current-configuration interface Forty<tab> #/#/# provides info on fortygig. should be able to use with bridge ag as well. 
+ 
+undo port trunk permit vlan 1   another default. do before previous.
+dis this        to see port info or BAGG info whatever you're in
+port access vlan X   to change vlan on port
+
+dis link-aggregation verbose Bridge-Aggregation ### for detailed look at BAGG
+
+dis lldp neighbor-information interface FortyGigE #/#/# verb
+ose  good for taking forty gig number found from previous command and finding neighbor IP or at least the name.
+
+
+lldp neighbor-information list   displays connected switch.
+
+qu to go home
+save force    do this when done to save your changes
+
+]other commands[
+description "info"  changes the name of port
+
+typical naming of Forty gigs:
+BAGG###::USPLNDPecsN1Lab00#::FGE#/#/#
+
+--------------------------------------
+Changing DNS record
+
+    Connect to the Linux based DNS server. LOG IN AS ROOT (r4)
+    Switch to the dnsinst users: su - dnsinst
+    Run the following command: 
+	
+	sudo ~/bin/addDnsRecord.aut -n <fqdn> -a <IP address>   
+
+	 
+	sudo ~/bin/delDnsRecord.aut -n pln-n1-cpt-vc11.n1ecs.hp.com -a 192.85.168.162
+	sudo ~/bin/delDnsRecord.aut -n pln-n1-cpt-vc10.n1ecs.hp.com -a 204.104.46.55
+	
+	sudo ~/bin/addDnsRecord.aut -n pln-n1-cpt-vc11.env01.mcloud.entsvcs.net -a 192.85.168.162
+	sudo ~/bin/addDnsRecord.aut -n pln-n1-cpt-vc10.env01.mcloud.entsvcs.net -a 204.104.46.55
+	
+	sudo ~/bin/addDnsRecord.aut -n d5-w44-u08.env01.mcloud.entsvcs.net -a 10.200.127.111; sudo ~/bin/addDnsRecord.aut -n d5-w44-u09.env01.mcloud.entsvcs.net -a 10.200.127.112
+	
+SCRIPT	
+sudo ~/bin/addDnsRecord.aut -n plnn13par6.env01.mcloud.entsvcs.net -a 10.200.0.142;
+
+ sudo ~/bin/addDnsRecord.aut -n pln-n2-so01_ss1.env02.mcloud.entsvcs.net -a 10.200.0.246; sudo ~/bin/addDnsRecord.aut -n pln-n2-so01_ss2.env02.mcloud.entsvcs.net -a 10.200.0.248; sudo ~/bin/addDnsRecord.aut -n pln-n2-so01_ss2.env02.mcloud.entsvcs.net -a 10.200.0.246; sudo ~/bin/addDnsRecord.aut -n pln-n2-so01_ss3.env02.mcloud.entsvcs.net -a 10.200.0.249; sudo ~/bin/addDnsRecord.aut -n pln-n2-so01_ss3.env02.mcloud.entsvcs.net -a 10.200.0.246; sudo ~/bin/addDnsRecord.aut -n pln-n2-so01_ss4.env02.mcloud.entsvcs.net -a 10.200.0.250; sudo ~/bin/addDnsRecord.aut -n pln-n2-so01_ss4.env02.mcloud.entsvcs.net -a 10.200.0.246; sudo ~/bin/addDnsRecord.aut -n so03_ss1.env02.mcloud.entsvcs.net -a 10.200.0.252; sudo ~/bin/addDnsRecord.aut -n so03_ss1.env02.mcloud.entsvcs.net -a 10.200.0.251; sudo ~/bin/addDnsRecord.aut -n so03_ss2.env02.mcloud.entsvcs.net -a 10.200.0.253; sudo ~/bin/addDnsRecord.aut -n so03_ss2.env02.mcloud.entsvcs.net -a 10.200.0.251; 
+
+
+
+	to remove, substitute addDnsRecord with delDnsRecord
+
+The current DNS server names in the IPSchema for the labs:
+@f73rm47hG4g4ku1990
+    pln-n2-dns3           - 204.104.116.56
+    pln-n1-DNS3           - 192.85.168.73
+	FT1 DNS - (windows) 204.104.5.217 and mgmt is 218
+    DNS1 (in Stage01 lab) - 
+
+--------------------------------------
+OTHER COMMANDS
+
+dis int brie | i DOWN - see down ports
+dis vlan - to see vlans on switch
+
+perl    -  execute (and other stuff)
+
+sudo useradd -c "First Lastname" -m -p EWreLPMiqGVWE userid
+sudo chage -d 0 userid 
+sudo usermod -G wheel userid  (use nt id)
+
+qu^     -         ]return to root[
+
+
+route config
+route add -host <IP Destination> dev nm-bond
+
+for permanent
+go to /etc/sysconfig/network-scripts (depending on OS it could just be /network)
+find route folder. if not there, make it route-XYZ (whatever is default bond)
+vi (filename) to make a thing
+
+add entry there: GET MORE INFO
+ex:
+28.1.115.240/32 via 28.1.112.1 dev bond0
+28.1.115.241/32 via 28.1.112.1 dev bond0 
+
+for suse research yast
+
+Port query:
+portqry -n 155.61.34.242 -p tcp -o 53,88,135,139,389,636,464,3268,3269,9389 

@@ -1,0 +1,7 @@
+terraform init - initializes terraform for use. do it in the directory of choice
+
+terraform plan - dry run
+
+terraform apply - applies changes
+
+terraform destroy - destroy all managed infra

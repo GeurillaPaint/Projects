@@ -1,0 +1,19 @@
+------------------------------------------------------------------------------------------------------------------
+
+                                                    Python II
+                                                    Using 2.7
+
+------------------------------------------------------------------------------------------------------------------
+
+DIRECTORY:
+--------------
+
+stringefandcee.py - For string formatting and concatenation best practice
+
+argparseintr.py - intro to argparse for making cmd line interfaces
+
+lscompgenerat.py - List comprehension and generator expressions
+
+timeitmod.py - intro to the timeit module.
+
+enumr8.pu - of enumeration.

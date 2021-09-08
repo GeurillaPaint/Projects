@@ -1,0 +1,154 @@
+What's a container?
+ - A devoted section of hard drive space. Basically a unit of code
+ and an instance all packed together with its dependencies. 
+ - Containers run based on their limitations, and it's usually a tiny
+ program or application that runs in that container.
+ 
+  - containers dont share file systems
+  
+  
+Dockerfile - configuration file to define how a container should behave, and build it.
+
+Dockerfile setup:
+
+Specify a base image
+Run commands to install additional programs
+specify commands on startup
+
+Core of a docker file
+
+FROM
+RUN
+CMD
+
+writing dockerfile = being given a computer with no os and being told to install firefox
+
+How would you do it?
+
+Flow:
+
+ - Install the OS
+ - start your default browser
+ - navigate to mozilla.com
+ - download installer
+ - open the file
+ - execute firefox_installer.execute
+ - execute firefox.execute
+ 
+ ^essentially a dockerfile.
+ 
+ 
+ Docker uses caching, making builds faster a second time through.
+ Any time you change the docker file, you only have to run the steps from the 
+ changed line down.
+ 
+ How docker builds a docker build:
+ 
+ From: grabs image from dockerhub (base)
+ 
+ Run: using the base image as a reference, runs commands as inputted and creates a 
+ temp container, snapshots it, and uses it for the main container build.
+ cmd: continues in cycle to create temp containers, run commands, and snapshoting, 
+ finishing up with placing an on run command when the image is officially run and not before.
+ 
+ 
+ If you make changes to a docker file, make the changes as far down the line as possible.
+ order of operations is important. caching won't happen if you fuck with existing architecture.
+ 
+ 
+ Image tags:
+ 
+ after building a dockerfile build, it's a pain in the ass to do docker build containerid.
+ so tags can come into play instead.
+ 
+ docker build -t DockerID/repo project name:version .
+ 
+ docker build = commands to build from docker file.
+ 
+ -t = in this instance, it's a tag flag
+ 
+ DockerID/repoprojectname:version = naming convention tag. allows easier runs. no ids.
+ 
+ example tag: redhering/redis:latest
+ 
+ . = specifies the directory of files/folders to use in the build.
+ 
+ so say you do docker build -t redhering/project1:latest .
+ 
+ that creates a container called project 1 which can be run by 
+ 
+ docker run redhering/project1
+ 
+ 
+ docker hub. use it. find images you can use for yo shit
+ 
+ 
+ 
+ COPY
+ 
+ when doing a build, you sometimes have dependency files ya gotta add. you can use COPY
+ to get those in. 
+ 
+ if . indicates the current directory, you can use ./ in copy to do the entire directory
+ and any folders inside.
+ 
+ so we do COPY ./ ./
+ 
+ first ./ = path to folder to copy from on your machine relative to build
+ 
+ second ./ =destination path inside container.
+ 
+ COPY goes above RUN in dockerfiles.
+ 
+ 
+ 
+ Docker compose
+ 
+ Seperate CLI that gets installed along with docker.
+ 
+ used to start up multiple docker containers at the same time
+ 
+ automates some long winded arguments we pass to docker run
+ 
+ can be done with docker-compose.yml
+ 
+ 
+ Docker compose anatomy:
+ 
+ version: '#' = the version of docker compose to use.
+ services: = what services to run, such as container types.
+	redis-server:
+		image: 'redis'   = This command states build a redis server using a redis image.
+	node-app:
+		restart: always = restart policy in case of crash.
+		build: . = build a node-app server. build: . means look for a dockerfile in the directory.
+		ports:
+		 - "8081:8081"  = specify ports to use in node-app build. - allows for array of options.
+		                  the 8081:8081 is from local port to container port.
+		server:
+			build:
+				dockerfile: Dockerfile.dev = choose the dockerfile you want
+				context: ./server = specifies the folder to look in, which here is called server.
+			volumes:
+				- /app/node_modules = specifies volumes
+				- ./server:/app
+			environment: set environment variables.
+				- REDIS_HOST=redis  = variable for environment
+						  
+When you create a docker compose file in this manner, docker is smart enough to create
+the containers using the ports specified on the same network. Thus, they automagically
+can communicate with each other without having to worry about setting up networking.
+Hell the whole ports thing is just for you to connect to the container. It has nothing
+to do with the magic that already exists.
+
+variables:
+
+variablename=value - sets in container at run time
+variableName - sets at run time, value taken locally.
+
+restart policies:
+
+no - never attempt to restaart the container if it stops or crashes
+always - if container stops for any reason, restart it.
+on-failure - restart if container stops with error code
+unless-stopped - restart unless made to forcibly stop.

@@ -1,0 +1,53 @@
+Docker commands:
+
+-it = important flag. used for interacting with containers.
+
+-i = Everything you type is sent to STDIN, which allows interaction.
+-t = makes things pretty, formatted, readable, and user friendly.
+-d = when put with docker run, runs contianer in background.
+
+docker ps = shows running containers. Also works with docker-compose
+docker ps --all = shows all containers available.
+
+docker run <containerID> runs specified container.
+ - You can add code to the end of a run command to run on boot.
+  Ex: docker run busybox echo hi
+  
+ - Use -it flag for containers that will not exit immediately. That way
+ They can be killed with ctrl+c. 
+ 
+ docker run = docker create + docker start
+ 
+ docker run -it <containerID> sh = run container, get shell immeidately. STDIN 
+ 
+ docker run -p 8080:8080 <imgID> = allows for container run with port mapping.
+ 
+ -p for port
+ first 8080 = route incoming requests to this port on local hosts to...
+ second 8080 = ...this port inside the container.
+ 
+ docker start <containerID> = begin a container, but you need -a to see the output
+ 
+ 
+ docker system prune = wipes docker clean of containers, images, everything.
+ 
+ docker logs <containerID> = retrieves all info from container. userful if you didn't -a
+ 
+ docker stop <containerID> = Tells container to stop with SIGTERM command. This allows container
+  to gracefully shut down.
+  
+  docker kill <containerID> = Tells container to stop with SIGKILL which is like a power pull.
+  
+  docker exec -it <containerID> <command> = allows you to input commands into a container
+  
+  docker exec -it <cID> sh = terminal access for container. great for debugging.
+  
+  docker commit -C 'CMD ["command"]' containerID = creates snapshot of container manually.
+  ^ dont use this tho. use docker files 
+  
+  
+  docker-compose up = runs docker-compose yaml file.
+  --build = used for rebuilding container after changes.
+  -d for background
+  
+  docker-compose down = stops all containers w/compose.

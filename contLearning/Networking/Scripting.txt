@@ -1,0 +1,52 @@
+Script for zoning
+
+alicreate "d5_w50_u01_b08_HBA1","51:40:2e:c0:00:d4:6b:95"
+zonecreate "d5_w50_u01_b08_HBA1_PLNN13PAR6","d5_w50_u01_b08_HBA1; PLNN13PAR6_gv1_n0s2p1"
+cfgadd "ECS_SAN_A","d5_w50_u01_b08_HBA1_PLNN13PAR6"
+cfgenable ECS_SAN_A
+
+alicreate "D5_T09_U12_B10_HBA1","50:01:43:80:24:d1:96:f7"
+zonecreate "D5_T09_U12_B10_HBA1_PLNN13PAR1","D5_T09_U12_B10_HBA1; PLNN13PAR1_g1_n1s2p4"
+cfgadd "ECS_SAN_B","D5_T09_U12_B10_HBA1_PLNN13PAR1"
+cfgenable ECS_SAN_B
+
+
+
+HPSA
+(re)install - NOTE don't have to have both satellites, can have just one. examples are done with 1.
+
+linux: reach server. uninstall any hpsa on there, check /opt/opsware/agent/bin/ for opsware-agent. perl to run. exit out, back in, get to root. run linux script below.
+
+windows: uninstall from add or remove programs. admin cmd.exe. run windows script.
+
+Linux:
+/root/opsware-agent-<ver>-<os> -f -s --opsw_gw_addr_list <HPSA satellite server#1>:3001,<HPSA satellite server#2>:3001
+Windows:
+c:\install\hpsa\opsware-agent-<ver>-<os>.exe -s --loglevel info --withmsi --opsw_gw_addr <HPSA satellite server#1>:3001,<HPSA satellite server#2>:3001
+
+
+EX::::
+/root/opsware-agent-60.0.64851.2-linux-6SERVER-X86_64 -f -s --opsw_gw_addr_list 204.104.248.63:3001
+
+c:\install\hpsa\opsware-agent-60.0.73283.4-win32-6.3-X64.exe -s --loglevel info --withmsi --opsw_gw_addr 204.104.248.63:3001
+
+
+
+KMS
+N2 MMI 204.104.116.50
+N1 MMI 30.167.238.21
+N1 CC 30.167.238.21
+
+Windows Activation 2012 R2
+
+cscript c:\Windows\system32\slmgr.vbs -IPK D2N9P-3P6X9-2R39C-7RTCD-MDVJX
+cscript c:\Windows\system32\slmgr.vbs -skms  204.104.116.50
+cscript c:\Windows\system32\slmgr.vbs -ATO
+
+
+
+
+
+
+
+______________________________________________________________________

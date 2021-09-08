@@ -1,0 +1,35 @@
+Connecting to OA (schema for enclosure)
+
+ssh admin@[IP address] (r4)
+
+to get to particular switch like switch 6
+show interconnect list
+connect interconnect [#]
+
+(help is an option always)
+
+you can also check the OA in windows, to see a map of the system
+
+
+
+------------------------------------------------------------------------------
+Reset Efuse:
+
+ssh into the OA ip
+reset server (bay number)
+Other useful commands
+display server list
+display interconnect list
+connect server [bay#] will connect you to the blade ilo
+connect interconnect [interconnect bay#] will get you on the swicth the same as a ToR
+config  - use inside bay. config mode.
+
+
+
+------------------------------------------------------------------------------
+OTHER OA COMMANDS
+
+max-vlans (value)  - in config mode. set number of vlans
+exit - to exit
+write mem - save
+reload - reboot

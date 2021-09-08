@@ -1,0 +1,308 @@
+Kubernetes - open source container orchestration tool by Google.
+
+manages applications that are containerized in different environments.
+
+Why do we need it:
+
+ - The rising usage of microservices over monolith applications.
+    -Monolith= all in one application. All the parts are assembled as one thing.
+    -microservices= application where all or most parts are individual pieces that
+      can have isolated and unique environments, and can be worked on without affecting
+      the whole fookin thing.
+      
+  - when you need to run many different containers with different images.
+      
+ - Increased usage of containers.
+   
+   With the increase in container usage and microservices, it created the perfect storm
+   for an application to manage all this shit, because custom scripts and tooling creates
+   too much complexity when you have hundreds of thousands of containers that need to be
+   deployed and managed, each with different requirements and teams.
+   
+  - Declarative deployments are just easier to manage than imperative. k8s makes that
+  happen.Imagine having to update 100 machines out of 1000 to have a specific version of an app.
+    With kubernetes, you can ideally just tell it (ideally with the config file) to update
+    any node meeting certain criteria with the update, and have k8s just figure it out.
+    keep in mind k8s can also do the imperative approach, but it's honestly not ideal at all.
+    
+    
+   
+What does Kubernetes offer:
+
+ - High availability, no downtime
+ - Scalability, high performance
+ - disaster recovery, backup/restore
+ - run many containers over multiple different machines.
+ 
+ When not to use it:
+  - if you don't need to scale multiple different types of containers, but just 1.
+  
+ 
+ heiarchy:
+ 
+ kubernetes Cluster: a master node and 1 or more worker nodes.
+ nodes: virtual machines or physical computers that hold Pods.
+ pods: holds containers.
+ 
+ 
+ Important Takeaways: 
+ 
+  - K8s is a system to deploy containerized apps
+  - Nodes are individual machines or vms, that run containers.
+  - Masters are machines or vms with a set of programs to manage nodes
+  - K8s doesn't build images - it gets them elsewhere
+  - k8s master decides where to run each container - each node can run a dissimilar set of containers
+  - To deploy something, we update the desired state fo the master with a config files
+  - The master works constantly to meet your desired state
+
+Pods and Nodes:
+ - kubernetes uses nodes. smallest unit is a pod, which is an abstraction over container
+
+ - pod creates a running environment on top of the container.
+ - 1 app per pod
+ - each pod gets an ip address
+ - pods are ephemeral, but self healing.
+ - when a pod dies, it's replaced but gets a new ip.
+
+Service:
+
+ - Service in kubernetes creates static IPs for your ephemeral pods.
+   services also allow pods to communicate with one another
+   lifecycle of service and pod are not connected. no changing ips.
+
+   an external service - allows your app to be available on the internet to external sources
+   an internal service - created for the database so that the database isnt exposed openly.
+
+   IP for external service is for the node in question. If you want a proper web address,
+   use ingress.
+
+   ingress - secure dns forwarding
+
+
+Minikube:
+
+        creates local k8s cluster. great for development.
+        use kubectl for managing the containers in the node.
+        use minikube to manage the vm itself.
+
+
+Configmap:
+
+ - external configuration of your application
+  - Attaching to a pod, if a change needs to be made on the pod, rather than
+  destroying the pod and redoing the whole thing, you can just change variables
+  in configmap and it reflects on to the associated pods.
+  
+ Secret:
+  - It's the same as configmap but for credentials and data that needs security
+   - base64 encoded
+   
+ all configmap and secret data can be used in the pod by using properties files
+ or environment variables. 
+ 
+
+
+How data storage works:
+
+ - pods are ephemeral so they cant reliably store data. so volumes are used.
+ - volumes are mountable storage. kinda like aws.
+ - volumes can be local or remote.
+ 
+Deployment and Stateful set:
+ - If an application dies, you'll have downtime. That's where replication comes into place.
+ Replicate EVERYTHING. have extra nodes
+  - service can act as a load balancer and make sure that the request from a user
+  goes to a working node while the other is repaired.
+  
+  Deployment: define blueprints for pods. allows you to state how many nodes you want.
+   - we create deployments, not pods. abstraction of pods.
+   - However deployment cant make database replicants. This is due to its state.
+  
+  StatefulSet:
+   - like deployment, but for database. replicates databases and also determines
+     which database is writing and when, and keeps things aligned.
+     However, it's tedious and difficult. better to host database outside kubernetes cluster
+     
+     
+  Access modes:
+     
+     k8s storage claims have 3 access modes.
+     
+     ReadWriteOnce -> can be used by a single node
+     ReadOnlyMany -> multiple nodes can read it
+     ReadWriteMany -> read/write multinode
+
+Node processes:
+
+  Worker Nodes:
+  - each node has multiple pods, each pod with an application. worker nodes manage these.
+  - to manage everything 3 processes must be installed on every node.
+    - container runtime: allows containers to run.
+    - kubelet: interacts with both container and node. starts pod.
+    - kube proxy: forwards the requests between nodes. 
+    
+  Master Nodes:
+   - allows interaction with the cluster.
+    - scheduling
+    - monitoring
+    - reschedule/restart pod
+    - join new node
+   4 processes run on every master:
+    - API server: cluster gateway, interacts with a client to control. also gatekeepers auth.
+    - Scheduler: after api server validates request, sends to scheduler to start app on node.
+        uses intelligence to determine which pod will be scheduled.
+    - Controller Manager: detects cluster state changes.
+    - etcd: cluster brain. key value store for cluster changes.
+    
+
+
+k8s yaml: a breakdown
+
+
+Config files are used to create objects.
+
+Objects include:
+    - StatefulSet
+    - ReplicaController
+    - PersistentVolume
+    -secret
+    -ConfigMap
+    - Pod  ->runs one or more closely related containers.
+    - Services ->sets up networking within k8s cluster.
+      -clusterIP   -exposes pods to other objects in the cluster
+      -NodePort ->Exposes container to the outside world. (dev use only)
+      -LoadBalancer  -legacy way of getting network traffic to cluster
+      -Ingress       -exposes set of services to the outside.
+   
+  Objects serve different purposes, running containers, monitoring, setting networks up....
+
+What do objects do?
+
+ They make your fookin cluster run, ya shite.
+
+example set, client-pod.yaml
+
+apiVersion: v1  --- defines the set of objects that can be used. Look it up depending on object type needed.
+kind: Pod    --- indicates the type of object being made.
+metadata:
+  name: client-Pod    ----pod name
+  labels:
+    component: web     ----pod label 
+spec:
+  containers:
+    - name: client  ----name of the container inside the pod
+      image: stephengrider/multi-client   ---container image used.
+      ports: 
+        - containerPort: 3000 -----expose port to outside
+     env:
+       - name: REDIS_HOST         <--variables, var name and value
+         value: redis-cluster-ip-service
+        
+        
+ example set II
+ 
+ apiVersion: v1
+kind: Service   ----object type
+metadata:
+  name: client-node-port
+spec:
+  type: NodePort   ----object subtype
+  ports:
+    - port: 3050   ----port other containers can use to access this pod.
+      targetPort: 3000 ---port for target pod
+      nodePort: 31515  ----used to for user access. URL, etc.
+  selector:     ------allows for linking of containers. 
+    component: web  ---selector is web(can be anything). so anything with a web tag will get these specs.
+    
+   
+example set III
+
+apiVersion: apps/v1   <-api version to use
+kind: Deployment      <--object type
+metadata:             <- data to provide object
+  name: client-deployment    <--arbitrary name used for deployment
+spec:                      <---specs to give deployment.
+  replicas: 1             <---number of pods to make.
+  selector:               <----helps master find and manage pods it makes with labels.
+    matchLabels:
+      component: web  <---tag label to match things up.
+  template:         <---template to use for each pod. 
+    metadata:
+      labels:
+        component: web
+    spec:
+      volumes:
+        - name: ps-storage
+            persistentVolumeClaim:
+                claimName: database-pvolume-claim     
+      containers:
+        - name: client
+          image: stephengrider/multi-client
+          ports:
+            -containerPort: 3000
+          volumeMounts:
+            - name: ps-storage
+              mountPath: /var/lib/postgresql/data
+
+   
+    
+    example 4:
+    
+    apiVersion: 1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-pvolume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce    <--get storage for 1 node
+  resources:
+    requests:
+      storage: 2Gi   <- get 2GB
+    
+    
+    What k8s does when you update config.
+    
+    when you apply a new updated config file to kubectl, master node inspects config
+    files name and kind properties. It then compares to currently running pods in its clusters, 
+    and applies only updates to the objects that identify with those tokens. It does this by removing
+    and replacing containers within the pods.
+    If you change the name, it'll create new pods with said name, but wont delete other prev pods
+    
+    Limitations:
+        Despite updating ease, there are limitations. You cannot update some fields such as
+        number of containers, port, or client name. At least not directly.
+        
+        You need to use deployments. They will delete pods and recreate them with proper
+        specs. Also using deployments, you WILL SCALE DOWN changing replicant numbers.
+    
+    
+    
+    Further management of config with helm
+    
+    Not something i've used, but helm allows you to template your yaml files so that
+    they can be managed more easily and be reused for other projects without too much
+    of a headache. It's as easy as lifting and shifting yaml files into a helm template folder.
+    you then run the helm command to create a chart of all the yaml you put in template.
+    
+    What else is cool is you can dry run your yaml with helm, and it will point out any
+    errors with your yaml.
+    
+    deploying a helm chart deploys all the application's yaml files rather than 
+    doing one at a time within kubernetes.
+    
+    What makes your applications reusable for other projects is value injection.
+    Helm offeres a values file that can allow you to inject parameters into your yaml.
+    Pairing that with EKS will give you considerable control over your k8s environment.
+    
+    
+    combine configs, seperating with ---
+    
+    
+    secrets:
+    
+    env:
+        -name: PASSWORDVAR
+         valueFrom:
+            secretKeyRef:
+                name: passwordname
+                key: PASSWORDVAR

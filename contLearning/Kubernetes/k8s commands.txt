@@ -1,0 +1,69 @@
+install hyperhit and minikube
+	brew update
+	brew install hyperkit
+	brew install minikube
+	kubectl
+	minikube
+
+create minikube cluster
+	minikube start --vm-driver=hyperkit
+	kubectl get nodes
+	minikube status - check everything is running
+	kubectl version
+
+delete cluster and restart in debug mode
+	minikube delete
+	minikube start --vm-driver=hyperkit --v=7 --alsologtostderr
+	minikube status
+
+kubectl commands
+	kubectl cluster-info
+	kubectl get nodes
+	kubectl get pod
+	kubectl get services
+	kubectl create deployment nginx-depl --image=nginx
+	kubectl get deployment
+	kubectl get replicaset
+	kubectl edit deployment nginx-depl
+
+debugging
+	kubectl logs {pod-name}
+	kubectl exec -it {pod-name} -- bin/bash
+
+create mongo deployment
+	kubectl create deployment mongo-depl --image=mongo
+	kubectl logs mongo-depl-{pod-name}
+	kubectl describe pod(objecttype) mongo-depl(objectname) -->get detailed info about an object
+
+delete deplyoment
+	kubectl delete deployment <deplname>
+
+create or edit config file
+	kubectl apply -f <filename> -> feed a config file to kubectl
+	kubectl get pod
+	kubectl get deployment
+
+delete with config
+	kubectl delete -f <filename>.yaml
+	
+others:
+minikube ip --> gets ip of cluster for access. only way to reach web apps in test. dont forget port
+
+minikube service <servicename> --url  -->get url info
+
+kubectl set image <object_type> / <objectname> <container_name> = <new image> <---sets a new image.
+  
+ ex: kubectl set image deployment/client-deployment client=stephengrider/multi-client:v5
+  
+  
+eval $(minikube docker-env)   <--see inside docker minikube. goes away on term close  
+  
+  
+kubectl get storageclass
+        describe storage class
+
+kubectl create secret generic <secretname> --from-literal key=value  <-make secrets.give var		
+  
+#Metrics
+kubectl top 
+The kubectl top command returns current CPU and memory usage for a cluster’s pods or nodes, or for a particular pod or node if specified.

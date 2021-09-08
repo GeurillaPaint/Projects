@@ -1,0 +1,98 @@
+Github
+_____________________
+A proprietary web UI wrapper for managing git repos and workflows
+
+* announced to csc in 2015 at techcom
+
+* E-prise GitHub for DXC @
+  github.csc.com
+
+* open source projects at 
+  github.com/dxc-technology
+
+Git
+---
+*Developed by Linus Torvalds to be better than source code.
+
+*High performance, distributed, content manager for anything that uses text
+
+*Guarantees exactly what goes in comes out. memory corruption doesnt matter
+due to cryptographic signing.
+
+*Everyone has their own branch to pull requests seamlessly.
+
+Git skill: Fork and Pull
+------------------------
+No asking for permission to get stuff, just begging forgiveness (lol)
+
+Start with a main repository. It's then copied and "forked" in to other user's
+accounts.
+
+only time you need to ask permission is when you try to pull updated or edited
+code back to the main repository. Otherwise it can be forked, cloned, edited, and
+moved around freely with no permissions.
+
+ RETURN TO MODULE FOR the GREAT 6 COMMANDS!!!
+ 
+ 
+ _____________________
+ Jenkins
+ _____________________
+ 
+ All about continuous integration and continuous delivery. 
+ Used to build pipelines and integrate with developer tool chain like SCM and build scripts.
+ Tests can be run automatically on check in and then new code can be piped all the way to production
+ Jenkins is basically the CPU of all devops tools and integrates them.
+ 
+ Jenkins is built on the idea of plugins and its architecture on its user interface is plugin based.
+ 
+ the pipeline works as follows:
+ 
+ Compile and unit test |+| Build server.
+                       | |
+acceptance testing     |+| deployed on build server
+                       | |
+integration testing    |+| deployed to integration environment
+                       | |
+acceptance testing     |+| deployed to UAT environment
+                       | |
+push artifacts         |+| deployed to artifact server
+                       | |
+production             |+| push to production
+
+
+start Jenkins- (note this is a Docker command)
+docker run -p 8080:8080 -p 50000:50000 jenkins:2.46.1
+
+breakdown of this command::
+*docker run starts new container
+*-p 8080:8080 maps port 8080 in container to port 8080 on host system. this allows access from a browser
+*-p 50000:50000 maps port 50k which is for remote Java API
+*jenkins:2.46.1 specifies the Jenkins image from Docker Hub and the needed version. versions are used due to Jenkins constantly evolving.
+
+
+_____________________
+Ansible
+_____________________
+
+It's like chef, but with playbooks and plays instead of cookbooks and recipes. it's also newer.
+
+Anible is actually an SSH robot that guarantees order of execution. It does robot things.
+It can be used to run ad hoc commands on a remote host rather than logging in and using the remote CLI.
+Commands can be structured in to a playbook and those playbooks can manage the source control.
+I did not know it was a robot. That makes me like it more.
+
+
+CMD Breakdown:
+
+the hello world scenario.
+ansible all -i hosts -u cent -b -a "echo 'Hello World'"
+
+ansible runs Ansible ad hoc commands.
+all applies command to all groups defined in the inventory
+-i hosts specifies the file to read the inventory form
+(also cat hosts lets you see contents of it)
+-u is the user Ansible will log in with. 
+cent, in this case, is the user.
+-b makes Ansible become the root user. not always necessary.
+-a is the action Ansible will take.
