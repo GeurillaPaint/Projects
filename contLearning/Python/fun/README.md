@@ -1,0 +1,1 @@
+Please note that the files contained in the fun folder were projects meant for exploration of Python capabilities. I am not responsible for how you decide to use these files. Also I believe I defanged a few of them to be a bit less hostile, fyi.
