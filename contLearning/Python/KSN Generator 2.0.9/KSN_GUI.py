@@ -26,7 +26,7 @@ conversion without entering a serial number.
 
 Rapid Connect PIN currently unavailable.
 
-For Merchant Link PIN and Rapid Connect SRED,please enter the last 11 digits of the Presto
+For Merchant Link PIN and Rapid Connect SRED,please enter the last 11 digits of the
 Device S/N without the hash. Then, select 
 the KSN Type and choose PIN/SRED.
     '''
