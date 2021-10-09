@@ -1,5 +1,4 @@
 # Projects
 
 
-
-Placeholder repo to handle upcoming projects. Will add more at a later date.
+Repo to handle older projects, self learning, and fun tests for myself and others.
